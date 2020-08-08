@@ -2,6 +2,7 @@ package com.xebia.coding.assignment.articlemanagement.service;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,12 @@ public class ArticleService {
 		article.setSlug(Arrays.asList(article.getTitle().split(" ")).stream().map(x->x.toLowerCase()).collect(Collectors.joining("-")));
 		article.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		article.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-
+		Optional<Article> existingArticle = articleRepository.findBySlug(article.getSlug());
+		//version if same slug id is found.
+		if(existingArticle.isPresent())
+		{
+			article.setSlug(article.getSlug()+new Timestamp(System.currentTimeMillis()));
+		}
 		return articleRepository.save(article);	
 	}
 
@@ -85,12 +91,14 @@ public class ArticleService {
 		double totalWords =0L;
 		Article existingArticle = articleRepository.findBySlug(slug)
 				.orElseThrow(() -> new ResourceNotFoundException("Article not found for this slug id :: " + slug));
-
+		//counting all words of title, description, and body
 		totalWords = Arrays.asList(existingArticle.getTitle().split(" ")).stream().count();
 		totalWords = totalWords+Arrays.asList(existingArticle.getDescription().split(" ")).stream().count();
 		totalWords = totalWords+Arrays.asList(existingArticle.getBody().split(" ")).stream().count();
 
+		//fetch average speed  configured value
 		Long speedPerMin = Long.valueOf(environment.getProperty("average-words-reading-speed-per-minute"));
+		//calculate reading speed
 		double timeTaken = totalWords/speedPerMin;
 		ReadTimeResponse response = new ReadTimeResponse();
 		TimeToRead timeToRead = new TimeToRead();
@@ -98,9 +106,11 @@ public class ArticleService {
 		String valuesString = Double.toString(timeTaken);
 		String nums[] = valuesString.split("\\.");
 		int mins = Integer.parseInt(nums[0]);
-		double secs = Double.parseDouble("."+nums[1]);
-
-		int seconds = (int) (secs * 60);
+		
+		int seconds = 0;
+		if(nums.length>1) {
+			seconds = (int) (Double.parseDouble("."+nums[1]) * 60);
+		}
 		timeToRead.setMins(mins);
 		timeToRead.setSeconds(seconds);
 		response.setTimeToRead(timeToRead);

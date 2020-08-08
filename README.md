@@ -20,5 +20,11 @@ Method GET
 # How to run
 Import as Maven project and build and run as Spring boot or Java Application
 
+# Script for table
+Please refer schema.sql in the resource folder.The spring framework would be running this when application starts. 
+
+Note: The table would be dropped when you restart the application. 
+
 # Drawbacks
-Test cases are missing for automation
+Test cases are missing for automation. Planned to do BDD
+
