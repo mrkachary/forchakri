@@ -2,9 +2,11 @@ package com.xebia.coding.assignment.articlemanagement.controller;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +56,23 @@ public class ArticleController {
 	}
 
 	/**
+	 * getting an article by slug id
+	 * 
+	 * @param slug
+	 * @return
+	 * @throws ResourceNotFoundException
+	 */
+	@GetMapping("/slug/{slug}")
+	private ResponseEntity<Article> getArticleBySlug(@PathVariable String slug) throws ResourceNotFoundException
+	{		
+		Optional<Article> article = articleService.getArticleBySlugId(slug);
+		if(article.isPresent()) {
+			return ResponseEntity.ok().body(article.get());
+		} else {
+				return new ResponseEntity<Article>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	/**
 	 * API to update by Slug Id
 	 * 
 	 * @param article
@@ -87,7 +106,7 @@ public class ArticleController {
 	 * @throws ResourceNotFoundException 
 	 * @throws SQLException 
 	 */
-	@GetMapping("/slug/{slug}")
+	@GetMapping("/readspeed/slug/{slug}")
 	private ResponseEntity<ReadTimeResponse> getReaderSpeed(@PathVariable String slug) throws ResourceNotFoundException, SQLException {
 		ReadTimeResponse readerTime = articleService.getReaderTime(slug);
 		return ResponseEntity.ok().body(readerTime);

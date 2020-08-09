@@ -46,6 +46,15 @@ public class ArticleService {
 	}
 
 	/**
+	 * getting an article by slug id
+	 * 
+	 * @param slug
+	 * @return
+	 */
+	public Optional<Article> getArticleBySlugId(String slug) {
+		return articleRepository.findBySlug(slug);
+	}
+	/**
 	 * update updated date, generate slug id, and other fields based on slug id. 
 	 * 
 	 * @param article
