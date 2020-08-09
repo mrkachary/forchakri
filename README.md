@@ -13,8 +13,8 @@ Request:
 Response:
 {
 "id": 3,
-"slug": "how to learn spring boot by building an app",
-"title": "how-to-learn-spring-boot-by-building-an-app",
+"slug": "how-to-learn-spring-boot-by-building-an-app",
+"title": "how to learn spring boot by building an app",
 "description": "success story",
 "body": "Writes a CSV (comma separated values). The file is overwritten if it exists. If only a file name is specified, it will be written to the current working directory. For each parameter, NULL means the default value should be used. For each parameter, NULL means the default value should be used. For each ",
 "createdAt": "2020-08-08T06:34:52.903+00:00",
